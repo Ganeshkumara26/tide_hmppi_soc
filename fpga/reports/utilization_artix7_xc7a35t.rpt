@@ -1,0 +1,53 @@
+================================================================================
+  Resource Utilization Report: Combined TIDE + H-MPPI Integrated SoC
+  Target Device: Xilinx Artix-7 xc7a35t-cpg236-1
+  Synthesis Tool: Yosys 0.41+83 (synth_xilinx -family xc7 -top tide_hmppi_soc_top)
+  Target Clock  : 50.0 MHz (20.000 ns)
+================================================================================
+
+1. Slice Logic
+--------------------------------------------------------------------------------
+| Site Type                      | Used   | Fixed | Available | Util % |
+--------------------------------------------------------------------------------
+| Slice LUTs*                    | 23,242 |     0 |    20,800 | 111.7% |
+|   LUT as Logic                 | 23,242 |     0 |    20,800 | 111.7% |
+|     LUT1 (Inverters/Buffers)   |    160 |     0 |         - |      - |
+|     LUT2                       |  3,048 |     0 |         - |      - |
+|     LUT3                       |  2,371 |     0 |         - |      - |
+|     LUT4                       |  3,912 |     0 |         - |      - |
+|     LUT5                       |  5,981 |     0 |         - |      - |
+|     LUT6                       |  7,770 |     0 |         - |      - |
+|   LUT as Memory (Distributed)  |     20 |     0 |     9,600 |  0.21% |
+|     RAM32M                     |     18 |     0 |         - |      - |
+|     RAM64M                     |      2 |     0 |         - |      - |
+| Slice Registers (FFs)          |  9,208 |     0 |    41,600 | 22.13% |
+|   Register as Flip-Flop        |  9,208 |     0 |    41,600 | 22.13% |
+|     FDRE                       |  6,576 |     0 |         - |      - |
+|     FDCE                       |  2,588 |     0 |         - |      - |
+|     FDPE                       |     37 |     0 |         - |      - |
+|     FDSE                       |      7 |     0 |         - |      - |
+| CARRY4 (Arithmetic Carry)      |    986 |     0 |     8,150 | 12.10% |
+| MUXF7 (Wide Multiplexer)       |  3,884 |     0 |    16,300 | 23.83% |
+| MUXF8 (Wide Multiplexer)       |    261 |     0 |     8,150 |  3.20% |
+--------------------------------------------------------------------------------
+
+2. Dedicated Arithmetic & Memory Blocks
+--------------------------------------------------------------------------------
+| Site Type                      | Used   | Fixed | Available | Util % |
+--------------------------------------------------------------------------------
+| DSP48E1 Slices                 |     87 |     0 |        90 | 96.67% |
+|   H-MPPI Guidance Rollout Lanes|     80 |     0 |         - |      - |
+|   TIDE FP32 Multiplication Lane|      7 |     0 |         - |      - |
+| Block RAM (RAMB36E1 / 18E1)    |    2.5 |     0 |        50 |  5.00% |
+|   RAMB18E1 (Microcode RAM)     |      3 |     0 |       100 |  3.00% |
+|   RAMB36E1 (TIDE-RAM 4KB)      |      1 |     0 |        50 |  2.00% |
+| Global Clock Buffers (BUFG)    |      1 |     0 |        32 |  3.12% |
+--------------------------------------------------------------------------------
+
+*Note on xc7a35t LUT Capacity:
+The flat uncompressed register file (128x32 flops + bypass muxes) and unshared
+arithmetic lanes utilize 23,242 raw LUTs, fitting ideally on the mid-density
+Artix-7 xc7a200t platform (17.27% LUT utilization). On xc7a35t, DSPs (87/90) and
+BRAMs (2.5/50) fit within physical device capacity.
+================================================================================
+

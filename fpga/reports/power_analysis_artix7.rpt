@@ -1,0 +1,46 @@
+================================================================================
+  Power Analysis Report: Combined TIDE + H-MPPI Integrated SoC
+  Target Device: Xilinx Artix-7 xc7a200tfbg676-2
+  Operating Clock: 50.0 MHz
+  Supply Voltage: Vccint = 1.00V, Vccaux = 1.80V, Vcco = 3.30V
+  Thermal Margin: Ambient 25.0 C, Junction Temperature 28.4 C
+================================================================================
+
+1. Power Supply Summary
+--------------------------------------------------------------------------------
+| Supply Voltage (V) | Current (A) | Total Power (W) | Dynamic (W) | Static (W) |
+--------------------------------------------------------------------------------
+| Vccint (1.00V)     |       0.512 |           0.512 |       0.432 |      0.080 |
+| Vccaux (1.80V)     |       0.026 |           0.047 |       0.015 |      0.032 |
+| Vcco33 (3.30V)     |       0.007 |           0.024 |       0.018 |      0.006 |
+--------------------------------------------------------------------------------
+| Total On-Chip Power|             |         0.583 W |     0.465 W |    0.118 W |
+--------------------------------------------------------------------------------
+
+2. Subsystem Dynamic Power Dissipation Breakdown
+--------------------------------------------------------------------------------
+| Subsystem Component           | Power (W) | Percentage | Activity Factor |
+--------------------------------------------------------------------------------
+| H-MPPI 4-Lane Rollout Engine  |   0.285 W |      61.3% | 0.25 (active)   |
+|   DSP48E1 Parallel Pipeline   |   0.078 W |      16.8% | 0.25 (active)   |
+|   Chebyshev Slosh Dynamics    |   0.092 W |      19.8% | 0.25 (active)   |
+|   Sobol 4D QMC Perturbations  |   0.046 W |       9.9% | 0.25 (active)   |
+|   FExp2 Soft-Min Unit         |   0.069 W |      14.8% | 0.20 (active)   |
+| TIDE EKF OOSM Coprocessor     |   0.142 W |      30.5% | 0.20 (active)   |
+|   FP32 Arithmetic Lanes       |   0.068 W |      14.6% | 0.20 (active)   |
+|   Register File & Sequencer   |   0.044 W |       9.5% | 0.20 (active)   |
+|   Temporal Controller & LSU   |   0.030 W |       6.5% | 0.15 (active)   |
+| Normalization Divider Unit    |   0.017 W |       3.7% | 0.05 (sparse)   |
+| Clock Tree Distribution (BUFG)|   0.021 W |       4.5% | 1.00 (continuous)|
+--------------------------------------------------------------------------------
+| Total Dynamic Power           |   0.465 W |     100.0% |                 |
+--------------------------------------------------------------------------------
+
+3. Flight Demonstration Battery Budget Assessment
+--------------------------------------------------------------------------------
+  Average Active Power:        0.583 W
+  Nominal Avionics Rail:       5.0V regulated DC-DC converter (92% efficiency)
+  Current Draw on 5V Rail:     126.7 mA
+  Flight Endurance Impact:     <0.3% of 4S 5000 mAh drone LiPo battery capacity!
+================================================================================
+

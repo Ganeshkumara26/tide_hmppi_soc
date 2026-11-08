@@ -1,0 +1,19 @@
+Timing scenarios:
+  fast:
+    libcorner: fast generic
+    pexcorner: typical
+    mode: 
+    checks: hold
+  slow:
+    libcorner: slow generic
+    pexcorner: typical
+    mode: 
+    checks: setup
+  typical:
+    libcorner: typical generic
+    pexcorner: typical
+    mode: 
+    checks: power
+
+SDC files loaded:
+  /mnt/d/Desktop/4-2 project/tide_hmppi_soc/asap7/tide_hmppi_soc_top.sdc

@@ -1,0 +1,278 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <model name="quadrotor_slosh">
+    <pose>0 0 0.5 0 0 0</pose>
+
+    <!-- Base Airframe Link (Dry mass = 23.3 kg) -->
+    <link name="base_link">
+      <pose>0 0 0 0 0 0</pose>
+      <inertial>
+        <mass>23.3</mass>
+        <inertia>
+          <ixx>1.45</ixx>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyy>1.52</iyy>
+          <iyz>0.0</iyz>
+          <izz>2.85</izz>
+        </inertia>
+      </inertial>
+      <collision name="base_link_collision">
+        <geometry>
+          <box>
+            <size>0.95 0.95 0.35</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="base_link_visual">
+        <geometry>
+          <box>
+            <size>0.95 0.95 0.35</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.2 0.2 0.25 1.0</ambient>
+          <diffuse>0.3 0.3 0.35 1.0</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <!-- 35L Fluid Container Tank (Tare mass = 3.0 kg, positioned under frame r_tank = [0, 0, -0.05]) -->
+    <link name="slosh_tank_link">
+      <pose>0 0 -0.05 0 0 0</pose>
+      <inertial>
+        <mass>3.0</mass>
+        <inertia>
+          <ixx>0.08</ixx>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyy>0.08</iyy>
+          <iyz>0.0</iyz>
+          <izz>0.09</izz>
+        </inertia>
+      </inertial>
+      <collision name="tank_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.22</radius>
+            <length>0.32</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="tank_visual">
+        <geometry>
+          <cylinder>
+            <radius>0.22</radius>
+            <length>0.32</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.1 0.4 0.8 0.6</ambient>
+          <diffuse>0.1 0.5 0.9 0.7</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <joint name="tank_fixed_joint" type="fixed">
+      <parent>base_link</parent>
+      <child>slosh_tank_link</child>
+      <pose>0 0 0 0 0 0</pose>
+    </joint>
+
+    <!-- Spherical Pendulum Slosh Link (L_p = 0.18 m, m_p initial = 35.0 kg, omega_n = 7.38 rad/s) -->
+    <!-- Pitch rotation intermediate link -->
+    <link name="slosh_pitch_link">
+      <pose>0 0 -0.05 0 0 0</pose>
+      <inertial>
+        <mass>0.001</mass>
+        <inertia>
+          <ixx>1e-5</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1e-5</iyy>
+          <iyz>0</iyz>
+          <izz>1e-5</izz>
+        </inertia>
+      </inertial>
+    </link>
+
+    <joint name="slosh_pitch_joint" type="revolute">
+      <parent>slosh_tank_link</parent>
+      <child>slosh_pitch_link</child>
+      <pose>0 0 0 0 0 0</pose>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+          <lower>-1.05</lower>
+          <upper>1.05</upper>
+        </limit>
+        <dynamics>
+          <damping>0.664</damping> <!-- 2 * zeta * omega_n * m_p * L_p^2 with zeta=0.05, omega_n=7.38 -->
+          <friction>0.0</friction>
+        </dynamics>
+      </axis>
+    </joint>
+
+    <!-- Roll rotation and liquid pendulum bob -->
+    <link name="slosh_bob_link">
+      <pose>0 0 -0.23 0 0 0</pose> <!-- L_p = 0.18 m below tank pivot (-0.05 - 0.18 = -0.23) -->
+      <inertial>
+        <mass>35.0</mass> <!-- Dynamically depleted via spray plugin -->
+        <inertia>
+          <ixx>0.15</ixx>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyy>0.15</iyy>
+          <iyz>0.0</iyz>
+          <izz>0.15</izz>
+        </inertia>
+      </inertial>
+      <visual name="slosh_bob_visual">
+        <geometry>
+          <sphere>
+            <radius>0.12</radius>
+          </sphere>
+        </geometry>
+        <material>
+          <ambient>0.0 0.6 1.0 0.8</ambient>
+          <diffuse>0.0 0.7 1.0 0.8</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <joint name="slosh_roll_joint" type="revolute">
+      <parent>slosh_pitch_link</parent>
+      <child>slosh_bob_link</child>
+      <pose>0 0 0.18 0 0 0</pose>
+      <axis>
+        <xyz>1 0 0</xyz>
+        <limit>
+          <lower>-1.05</lower>
+          <upper>1.05</upper>
+        </limit>
+        <dynamics>
+          <damping>0.664</damping>
+          <friction>0.0</friction>
+        </dynamics>
+      </axis>
+    </joint>
+
+    <!-- 4x Brushless Propulsion Rotors (F450 geometry) -->
+    <!-- Rotor 0: Front-Right (+X, +Y, CW) -->
+    <link name="rotor_0">
+      <pose>0.33 -0.33 0.12 0 0 0</pose>
+      <inertial>
+        <mass>0.08</mass>
+        <inertia>
+          <ixx>1e-4</ixx>
+          <iyy>1e-4</iyy>
+          <izz>2e-4</izz>
+        </inertia>
+      </inertial>
+      <visual name="rotor_0_visual">
+        <geometry>
+          <cylinder>
+            <radius>0.24</radius>
+            <length>0.015</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 0.9</ambient>
+        </material>
+      </visual>
+    </link>
+    <joint name="rotor_0_joint" type="revolute">
+      <parent>base_link</parent>
+      <child>rotor_0</child>
+      <axis><xyz>0 0 1</xyz></axis>
+    </joint>
+
+    <!-- Rotor 1: Rear-Left (-X, -Y, CW) -->
+    <link name="rotor_1">
+      <pose>-0.33 0.33 0.12 0 0 0</pose>
+      <inertial>
+        <mass>0.08</mass>
+        <inertia>
+          <ixx>1e-4</ixx>
+          <iyy>1e-4</iyy>
+          <izz>2e-4</izz>
+        </inertia>
+      </inertial>
+      <visual name="rotor_1_visual">
+        <geometry>
+          <cylinder>
+            <radius>0.24</radius>
+            <length>0.015</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 0.9</ambient>
+        </material>
+      </visual>
+    </link>
+    <joint name="rotor_1_joint" type="revolute">
+      <parent>base_link</parent>
+      <child>rotor_1</child>
+      <axis><xyz>0 0 1</xyz></axis>
+    </joint>
+
+    <!-- Rotor 2: Front-Left (+X, -Y, CCW) -->
+    <link name="rotor_2">
+      <pose>0.33 0.33 0.12 0 0 0</pose>
+      <inertial>
+        <mass>0.08</mass>
+        <inertia>
+          <ixx>1e-4</ixx>
+          <iyy>1e-4</iyy>
+          <izz>2e-4</izz>
+        </inertia>
+      </inertial>
+      <visual name="rotor_2_visual">
+        <geometry>
+          <cylinder>
+            <radius>0.24</radius>
+            <length>0.015</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.8 0.1 0.1 0.9</ambient>
+        </material>
+      </visual>
+    </link>
+    <joint name="rotor_2_joint" type="revolute">
+      <parent>base_link</parent>
+      <child>rotor_2</child>
+      <axis><xyz>0 0 1</xyz></axis>
+    </joint>
+
+    <!-- Rotor 3: Rear-Right (-X, +Y, CCW) -->
+    <link name="rotor_3">
+      <pose>-0.33 -0.33 0.12 0 0 0</pose>
+      <inertial>
+        <mass>0.08</mass>
+        <inertia>
+          <ixx>1e-4</ixx>
+          <iyy>1e-4</iyy>
+          <izz>2e-4</izz>
+        </inertia>
+      </inertial>
+      <visual name="rotor_3_visual">
+        <geometry>
+          <cylinder>
+            <radius>0.24</radius>
+            <length>0.015</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.8 0.1 0.1 0.9</ambient>
+        </material>
+      </visual>
+    </link>
+    <joint name="rotor_3_joint" type="revolute">
+      <parent>base_link</parent>
+      <child>rotor_3</child>
+      <axis><xyz>0 0 1</xyz></axis>
+    </joint>
+
+  </model>
+</sdf>

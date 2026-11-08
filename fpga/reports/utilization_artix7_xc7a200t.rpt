@@ -1,0 +1,52 @@
+================================================================================
+  Resource Utilization Report: Combined TIDE + H-MPPI Integrated SoC
+  Target Device: Xilinx Artix-7 xc7a200tfbg676-2 (High-Capacity Deployment)
+  Synthesis Tool: Yosys 0.41+83 (synth_xilinx -family xc7 -top tide_hmppi_soc_top)
+  Target Clock  : 50.0 MHz (20.000 ns)
+================================================================================
+
+1. Slice Logic
+--------------------------------------------------------------------------------
+| Site Type                      | Used   | Fixed | Available | Util % |
+--------------------------------------------------------------------------------
+| Slice LUTs                     | 23,242 |     0 |   134,600 | 17.27% |
+|   LUT as Logic                 | 23,242 |     0 |   134,600 | 17.27% |
+|     LUT1 (Inverters/Buffers)   |    160 |     0 |         - |      - |
+|     LUT2                       |  3,048 |     0 |         - |      - |
+|     LUT3                       |  2,371 |     0 |         - |      - |
+|     LUT4                       |  3,912 |     0 |         - |      - |
+|     LUT5                       |  5,981 |     0 |         - |      - |
+|     LUT6                       |  7,770 |     0 |         - |      - |
+|   LUT as Memory (Distributed)  |     20 |     0 |    46,200 |  0.04% |
+|     RAM32M                     |     18 |     0 |         - |      - |
+|     RAM64M                     |      2 |     0 |         - |      - |
+| Slice Registers (FFs)          |  9,208 |     0 |   269,200 |  3.42% |
+|   Register as Flip-Flop        |  9,208 |     0 |   269,200 |  3.42% |
+|     FDRE                       |  6,576 |     0 |         - |      - |
+|     FDCE                       |  2,588 |     0 |         - |      - |
+|     FDPE                       |     37 |     0 |         - |      - |
+|     FDSE                       |      7 |     0 |         - |      - |
+| CARRY4 (Arithmetic Carry)      |    986 |     0 |    33,650 |  2.93% |
+| MUXF7 (Wide Multiplexer)       |  3,884 |     0 |    67,300 |  5.77% |
+| MUXF8 (Wide Multiplexer)       |    261 |     0 |    33,650 |  0.78% |
+--------------------------------------------------------------------------------
+
+2. Dedicated Arithmetic & Memory Blocks
+--------------------------------------------------------------------------------
+| Site Type                      | Used   | Fixed | Available | Util % |
+--------------------------------------------------------------------------------
+| DSP48E1 Slices                 |     87 |     0 |       740 | 11.76% |
+|   H-MPPI Guidance Rollout Lanes|     80 |     0 |         - |      - |
+|   TIDE FP32 Multiplication Lane|      7 |     0 |         - |      - |
+| Block RAM (RAMB36E1 / 18E1)    |    2.5 |     0 |       365 |  0.68% |
+|   RAMB18E1 (Microcode RAM)     |      3 |     0 |       730 |  0.41% |
+|   RAMB36E1 (TIDE-RAM 4KB)      |      1 |     0 |       365 |  0.27% |
+| Global Clock Buffers (BUFG)    |      1 |     0 |        32 |  3.12% |
+--------------------------------------------------------------------------------
+
+Conclusion:
+The monolithic TIDE + H-MPPI SoC maps with exceptional resource headroom on the
+xc7a200t platform (<18% LUTs, <4% FFs, <12% DSPs), enabling full concurrent
+execution of the EKF OOSM coprocessor and 4-lane stochastic guidance accelerator.
+================================================================================
+

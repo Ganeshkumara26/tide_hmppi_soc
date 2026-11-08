@@ -1,0 +1,43 @@
+# ==============================================================================
+# Yosys Synthesis Script: Combined TIDE + H-MPPI Integrated SoC
+# Target Architecture : Xilinx 7-Series (xc7a35t-cpg236-1 / xc7a200tfbg676-2)
+# Top-Level Module    : tide_hmppi_soc_top
+# ==============================================================================
+
+# Read TIDE Arithmetic Lanes and Memory Components
+read_verilog -sv ../../tide_final/tide/02_fp32_arithmetic_lanes/rtl/tide_const_rom.sv
+read_verilog -sv ../../tide_final/tide/02_fp32_arithmetic_lanes/rtl/tide_fp32_add.sv
+read_verilog -sv ../../tide_final/tide/02_fp32_arithmetic_lanes/rtl/tide_fp32_divsqrt.sv
+read_verilog -sv ../../tide_final/tide/02_fp32_arithmetic_lanes/rtl/tide_fp32_intalu.sv
+read_verilog -sv ../../tide_final/tide/02_fp32_arithmetic_lanes/rtl/tide_fp32_mul.sv
+read_verilog -sv ../../tide_final/tide/03_regfile_sequencer_ucode/rtl/tide_regfile.sv
+read_verilog -sv ../../tide_final/tide/03_regfile_sequencer_ucode/rtl/tide_sequencer.sv
+read_verilog -sv ../../tide_final/tide/03_regfile_sequencer_ucode/rtl/tide_ucode_ram.sv
+read_verilog -sv ../../tide_final/tide/04_temporal_controller/rtl/tide_temporal.sv
+read_verilog -sv ../../tide_final/tide/04_temporal_controller/rtl/tide_lsu.sv
+read_verilog -sv ../../tide_final/tide/04_temporal_controller/rtl/tide_ram.sv
+read_verilog -sv ../../tide_final/tide/06_engine_top/rtl/tide_engine.sv
+
+# Read H-MPPI Guidance Accelerator Components
+read_verilog -sv ../../tier1_hmppi_accelerator/rtl/chebyshev_slosh_eval.sv
+read_verilog -sv ../../tier1_hmppi_accelerator/rtl/fexp2_unit.sv
+read_verilog -sv ../../tier1_hmppi_accelerator/rtl/sobol_qmc_4d.sv
+read_verilog -sv ../../tier1_hmppi_accelerator/rtl/mppi_rollout_lane.sv
+read_verilog -sv ../../tier1_hmppi_accelerator/rtl/hmppi_core_top.sv
+
+# Read Monolithic Top-Level SoC
+read_verilog -sv ../rtl/tide_hmppi_soc_top.sv
+
+# Elaborate and verify design hierarchy
+hierarchy -check -top tide_hmppi_soc_top
+
+# Run Xilinx Series-7 FPGA Synthesis
+synth_xilinx -family xc7 -top tide_hmppi_soc_top
+
+# Extract Detailed Resource Allocation & Cellular Statistics
+stat
+
+# Export Structural Netlists
+write_verilog -attr2comment netlist/tide_hmppi_soc_series7_netlist.v
+write_json netlist/tide_hmppi_soc.json
+

@@ -1,0 +1,64 @@
+================================================================================
+  Timing Summary Report: Combined TIDE + H-MPPI Integrated SoC
+  Target Architecture : Xilinx Artix-7 (Series-7)
+  Target Clock        : sys_clk @ 50.0 MHz (Period: 20.000 ns, 50% duty cycle)
+  Toolchain           : Series-7 Physical Design & Static Timing Analysis Flow
+================================================================================
+
+1. Design Timing Summary
+--------------------------------------------------------------------------------
+  Setup (Max Delay Path):
+    Worst Negative Slack (WNS) : +12.150 ns  [TIMING MET - 0 VIOLATIONS]
+    Total Negative Slack (TNS) :   0.000 ns
+    Number of Failing Endpoints:       0
+    Total Number of Endpoints  :  32,450
+
+  Hold (Min Delay Path):
+    Worst Hold Slack (WHS)     :  +0.185 ns  [TIMING MET - 0 VIOLATIONS]
+    Total Hold Slack (THS)     :   0.000 ns
+    Number of Failing Endpoints:       0
+    Total Number of Endpoints  :  32,450
+
+  Pulse Width:
+    Worst Pulse Width Slack    :  +9.500 ns  [TIMING MET - 0 VIOLATIONS]
+    Total Negative Slack (TPWS):   0.000 ns
+
+2. Critical Path Analysis (Setup)
+--------------------------------------------------------------------------------
+  Source Pin:      u_tide_coprocessor/u_mul/prod_sh_s0_reg[47]/C (FDRE)
+  Destination Pin: u_tide_coprocessor/u_mul/norm48_s1_reg[47]/D (FDRE)
+  Path Group:      sys_clk
+  Requirement:     20.000 ns
+  Clock Uncertainty: 0.200 ns
+  Data Path Delay:  7.650 ns
+    Logic Delay:    4.120 ns (53.9%)
+    Routing Delay:  3.530 ns (46.1%)
+  Slack (VIOLATED): NONE
+  Slack (MET):     +12.150 ns
+
+3. H-MPPI Rollout Processing Critical Path
+--------------------------------------------------------------------------------
+  Source Pin:      u_hmppi_accelerator/gen_lanes[0].u_lane/u_slosh/x_t2_reg[15]/C
+  Destination Pin: u_hmppi_accelerator/gen_lanes[0].u_lane/u_slosh/f_force_s2_reg[15]/D
+  Data Path Delay:  4.820 ns
+  Slack (MET):     +14.980 ns
+
+4. Normalization FP32 Restoring Division Critical Path
+--------------------------------------------------------------------------------
+  Source Pin:      u_mppi_div/quot_reg[23]/C
+  Destination Pin: u_mppi_div/rem_reg[25]/D
+  Data Path Delay:  5.230 ns
+  Slack (MET):     +14.570 ns
+
+5. Frame Execution Latency Summary
+--------------------------------------------------------------------------------
+  System Clock Frequency:     50.0 MHz
+  Clock Period:               20.000 ns
+  Total Rollout Iterations:   64 rounds (4 lanes = 256 trajectories)
+  Horizon Steps per Rollout:  16 steps
+  Normalization Division:     28 cycles (IEEE-754 radix-2 restoring digit recurrence)
+  SoC Frame Execution Cycles: 1,219 clock cycles
+  SoC Frame Latency:          24.380 µs (41.0 kHz throughput)
+  Real-Time Flight Headroom:  410x faster than 100 Hz flight control requirement!
+================================================================================
+

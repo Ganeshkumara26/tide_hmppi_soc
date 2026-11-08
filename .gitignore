@@ -1,0 +1,18 @@
+# Gitignore for Monolithic TIDE + H-MPPI SoC
+*.md
+!README.md
+!docs/
+!docs/**
+
+*.vvp
+*.vcd
+*.log
+*.pyc
+__pycache__/
+tb_tide_hmppi_soc
+
+run_*.py
+patch_*.py
+debug_*.py
+probe_*.py
+check_*.py

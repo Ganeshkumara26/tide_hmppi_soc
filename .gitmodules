@@ -1,0 +1,6 @@
+[submodule "submodules/tide"]
+	path = submodules/tide
+	url = https://github.com/Ganeshkumara26/TIDE_EKF_SOC.git
+[submodule "submodules/mppi"]
+	path = submodules/mppi
+	url = https://github.com/Ganeshkumara26/H_mppi.git
